@@ -1,3 +1,7 @@
+import json
+
+import jwt
+import requests
 from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.middleware import PersistentRemoteUserMiddleware
@@ -5,9 +9,6 @@ from django.contrib.auth.models import User
 from django.utils.deprecation import MiddlewareMixin
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
-import json
-import jwt
-import requests
 
 
 class AutoLoginMiddleware(MiddlewareMixin):
@@ -48,14 +49,18 @@ class HttpRemoteUserMiddleware(PersistentRemoteUserMiddleware):
 
     header = settings.HTTP_REMOTE_USER_HEADER_NAME
 
+
 class CloudflareAccessAuthentication(authentication.BaseAuthentication):
     """This class allows authentication via Cloudflare Access."""
+
     def _get_public_keys(self):
         """Returns the signing public key for the application token."""
-        res = requests.get(f"https://{settings.CLOUDFLARE_TEAM_NAME}.cloudflareaccess.com/cdn-cgi/access/certs")
+        res = requests.get(
+            f"https://{settings.CLOUDFLARE_TEAM_NAME}.cloudflareaccess.com/cdn-cgi/access/certs",
+        )
         public_keys = []
         jwk_set = res.json()
-        for key_dict in jwk_set['keys']:
+        for key_dict in jwk_set["keys"]:
             public_key = jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(key_dict))
             public_keys.append(public_key)
         return public_keys
@@ -72,7 +77,7 @@ class CloudflareAccessAuthentication(authentication.BaseAuthentication):
             cf_application_token = request.COOKIES.get("CF_Authorization")
         else:
             return None
-        
+
         # Get public keys from Cloudflare
         keys = self._get_public_keys()
 
@@ -81,24 +86,26 @@ class CloudflareAccessAuthentication(authentication.BaseAuthentication):
         for key in keys:
             try:
                 # decode returns the claims that has the email when needed
-                payload = jwt.decode(cf_application_token, key=key, audience=settings.CLOUDFLARE_AUD_TAG, algorithms=['RS256'])
+                payload = jwt.decode(
+                    cf_application_token,
+                    key=key,
+                    audience=settings.CLOUDFLARE_AUD_TAG,
+                    algorithms=["RS256"],
+                )
                 break
-            except:
+            except jwt.InvalidTokenError:
                 pass
         if payload is None:
-            raise AuthenticationFailed()
-        
+            raise AuthenticationFailed
+
         # Check if the user exists, if not create it
         try:
-            user = User.objects.get(email=payload['email'])
+            user = User.objects.get(email=payload["email"])
         except User.DoesNotExist:
-            user = User.objects.create_user(payload['custom']['preferred_username'], email=payload['email'])
+            user = User.objects.create_user(
+                payload["custom"]["preferred_username"],
+                email=payload["email"],
+            )
             user.save()
-        
+
         return (user, None)
-        
-
-        
-
-
-

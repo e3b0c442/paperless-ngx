@@ -151,21 +151,21 @@ jobs:
         env:
           PAPERLESS_CI_TEST: 1
           # Enable paperless_mail testing against real server
-          PAPERLESS_MAIL_TEST_HOST: ${{ secrets.TEST_MAIL_HOST }}
-          PAPERLESS_MAIL_TEST_USER: ${{ secrets.TEST_MAIL_USER }}
-          PAPERLESS_MAIL_TEST_PASSWD: ${{ secrets.TEST_MAIL_PASSWD }}
+          # PAPERLESS_MAIL_TEST_HOST: ${{ secrets.TEST_MAIL_HOST }}
+          # PAPERLESS_MAIL_TEST_USER: ${{ secrets.TEST_MAIL_USER }}
+          # PAPERLESS_MAIL_TEST_PASSWD: ${{ secrets.TEST_MAIL_PASSWD }}
         run: |
           cd src/
           pipenv --python ${{ steps.setup-python.outputs.python-version }} run pytest -ra
-      -
-        name: Upload coverage to Codecov
-        if: ${{ matrix.python-version == env.DEFAULT_PYTHON_VERSION }}
-        uses: codecov/codecov-action@v3
-        with:
-          # not required for public repos, but intermittently fails otherwise
-          token: ${{ secrets.CODECOV_TOKEN }}
-          # future expansion
-          flags: backend
+      # -
+      #   name: Upload coverage to Codecov
+      #   if: ${{ matrix.python-version == env.DEFAULT_PYTHON_VERSION }}
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     # not required for public repos, but intermittently fails otherwise
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     # future expansion
+      #     flags: backend
       -
         name: Stop containers
         if: always()
@@ -210,15 +210,15 @@ jobs:
           name: jest-coverage-report
           path: src-ui/coverage
           retention-days: 7
-      -
-        name: Upload frontend coverage to Codecov
-        if: always()
-        uses: codecov/codecov-action@v3
-        with:
-          # not required for public repos, but intermittently fails otherwise
-          token: ${{ secrets.CODECOV_TOKEN }}
-          # future expansion
-          flags: frontend
+      # -
+      #   name: Upload frontend coverage to Codecov
+      #   if: always()
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     # not required for public repos, but intermittently fails otherwise
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     # future expansion
+      #     flags: frontend
       -
         name: Run Playwright e2e tests
         run: cd src-ui && npx playwright test

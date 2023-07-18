@@ -481,6 +481,7 @@ LANGUAGE_COOKIE_NAME = f"{COOKIE_PREFIX}django_language"
 CLOUDFLARE_TEAM_NAME = os.getenv("PAPERLESS_CLOUDFLARE_TEAM_NAME")
 CLOUDFLARE_AUD_TAG = os.getenv("PAPERLESS_CLOUDFLARE_AUD_TAG")
 
+
 ###############################################################################
 # Database                                                                    #
 ###############################################################################
