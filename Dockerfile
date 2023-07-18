@@ -213,6 +213,7 @@ COPY --from=pipenv-base /usr/src/pipenv/requirements.txt ./
 # dependencies
 ARG BUILD_PACKAGES="\
   build-essential \
+  pkg-config \
   git \
   default-libmysqlclient-dev"
 

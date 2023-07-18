@@ -290,6 +290,7 @@ if DEBUG:
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "paperless.auth.CloudflareAccessAuthentication",
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
@@ -476,6 +477,9 @@ CSRF_COOKIE_NAME = f"{COOKIE_PREFIX}csrftoken"
 SESSION_COOKIE_NAME = f"{COOKIE_PREFIX}sessionid"
 LANGUAGE_COOKIE_NAME = f"{COOKIE_PREFIX}django_language"
 
+# Settings required for Cloudflare authentication
+CLOUDFLARE_TEAM_NAME = os.getenv("PAPERLESS_CLOUDFLARE_TEAM_NAME")
+CLOUDFLARE_AUD_TAG = os.getenv("PAPERLESS_CLOUDFLARE_AUD_TAG")
 
 ###############################################################################
 # Database                                                                    #
