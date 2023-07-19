@@ -293,6 +293,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
+        "paperless.auth.CloudflareAccessAuthentication",
     ],
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.AcceptHeaderVersioning",
     "DEFAULT_VERSION": "1",
@@ -475,6 +476,10 @@ COOKIE_PREFIX = os.getenv("PAPERLESS_COOKIE_PREFIX", "")
 CSRF_COOKIE_NAME = f"{COOKIE_PREFIX}csrftoken"
 SESSION_COOKIE_NAME = f"{COOKIE_PREFIX}sessionid"
 LANGUAGE_COOKIE_NAME = f"{COOKIE_PREFIX}django_language"
+
+# Settings required for Cloudflare authentication
+CLOUDFLARE_TEAM_NAME = os.getenv("PAPERLESS_CLOUDFLARE_TEAM_NAME")
+CLOUDFLARE_AUD_TAG = os.getenv("PAPERLESS_CLOUDFLARE_AUD_TAG")
 
 
 ###############################################################################
